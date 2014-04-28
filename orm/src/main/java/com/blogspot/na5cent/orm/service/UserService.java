@@ -22,4 +22,8 @@ public interface UserService {
     public void delete(User user);
 
     public List<User> findByNameLike(String name);
+    
+    public User findOne(int id);
+    
+    public boolean exists(int id);
 }

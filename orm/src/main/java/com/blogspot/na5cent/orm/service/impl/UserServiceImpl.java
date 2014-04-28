@@ -47,6 +47,16 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.findByNameLike('%' + name + '%');
     }
+
+    @Override
+    public User findOne(int pk) {
+        return userRepository.findOne(pk);
+    }
+
+    @Override
+    public boolean exists(int id) {
+        return userRepository.exists(id);
+    }
     
 
 }

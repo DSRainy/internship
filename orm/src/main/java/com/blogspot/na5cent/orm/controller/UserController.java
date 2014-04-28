@@ -6,9 +6,12 @@
 package com.blogspot.na5cent.orm.controller;
 
 import com.blogspot.na5cent.orm.model.User;
+import com.blogspot.na5cent.orm.repository.UserRepository;
 import com.blogspot.na5cent.orm.service.UserService;
 import com.blogspot.na5cent.orm.util.JSFSpringUtils;
 import java.io.Serializable;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,6 +22,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  *
@@ -29,11 +35,22 @@ import javax.faces.context.FacesContext;
 public class UserController implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(UserController.class.getName());
+    private final UserService userService = JSFSpringUtils.getBean(UserService.class);
 
+    
     private List<User> users;
-    private List<User> searchUsers;
+    private List<User> searchUsers = null;
     private User user;
-    private String keyword;
+    private String keyword = "";
+    private String word;
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
 
     public String getKeyword() {
         return keyword;
@@ -43,11 +60,9 @@ public class UserController implements Serializable {
         this.keyword = keyword;
     }
 
-    private final UserService userService = JSFSpringUtils.getBean(UserService.class);
-
     @PostConstruct
     public void postContruct() {
- 
+
     }
 
     public void reset() {
@@ -105,10 +120,10 @@ public class UserController implements Serializable {
     }
 
     public void onDelete() {
-        
+
 //        this.getUsers().remove(user);
         userService.delete(user);
- 
+
         showMessage(FacesMessage.SEVERITY_INFO, "delete user", "success");
     }
 
@@ -117,17 +132,31 @@ public class UserController implements Serializable {
                 .getExternalContext()
                 .getRequestParameterMap()
                 .get(paramName);
+
     }
 
     private void showMessage(FacesMessage.Severity severity, String title, String body) {
         FacesContext.getCurrentInstance()
                 .addMessage(null, new FacesMessage(severity, title, body));
     }
-    
+
     public List<User> onSearchUserByName() {
 //        String name = requestParam("searchUsername");
-        searchUsers = userService.findByNameLike(this.keyword);
+        if (!(this.keyword.equals(""))) {
+            searchUsers = userService.findByNameLike(this.keyword);
+        }
         return searchUsers;
+
     }
-    
+
+    public void onCheckHaveUser() {
+        int key;
+        key = parseInt(this.keyword);
+
+        if (userService.exists(key)) {
+            this.word = "Yes , I have.";
+        } else {
+            this.word = "No , I haven't.";
+        }
+    }
 }
