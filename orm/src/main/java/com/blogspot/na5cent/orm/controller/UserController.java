@@ -12,8 +12,11 @@ import com.blogspot.na5cent.orm.util.JSFSpringUtils;
 import java.io.Serializable;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -22,6 +25,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import static org.apache.taglibs.standard.functions.Functions.toLowerCase;
+import static org.apache.taglibs.standard.functions.Functions.toUpperCase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -37,7 +42,6 @@ public class UserController implements Serializable {
     private static final Logger LOG = Logger.getLogger(UserController.class.getName());
     private final UserService userService = JSFSpringUtils.getBean(UserService.class);
 
-    
     private List<User> users;
     private List<User> searchUsers = null;
     private User user;
@@ -143,7 +147,18 @@ public class UserController implements Serializable {
     public List<User> onSearchUserByName() {
 //        String name = requestParam("searchUsername");
         if (!(this.keyword.equals(""))) {
+            
             searchUsers = userService.findByNameLike(this.keyword);
+            
+            if (searchUsers == null) {
+                this.keyword = toLowerCase(this.keyword);
+                searchUsers = userService.findByNameLike(this.keyword);
+            }
+
+            if (searchUsers == null) {
+                this.keyword = toUpperCase(this.keyword);
+                searchUsers = userService.findByNameLike(this.keyword);
+            }
         }
         return searchUsers;
 
@@ -159,4 +174,5 @@ public class UserController implements Serializable {
             this.word = "No , I haven't.";
         }
     }
+
 }

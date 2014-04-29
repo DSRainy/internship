@@ -10,6 +10,9 @@ import com.blogspot.na5cent.orm.repository.UserRepository;
 import com.blogspot.na5cent.orm.service.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,17 +42,17 @@ public class UserServiceImpl implements UserService {
     public void delete(User user) {
         userRepository.delete(user);
     }
-    
- 
 
     @Override
     public List<User> findByNameLike(String name) {
 
         return userRepository.findByNameLike('%' + name + '%');
+
     }
 
     @Override
     public User findOne(int pk) {
+
         return userRepository.findOne(pk);
     }
 
@@ -57,6 +60,12 @@ public class UserServiceImpl implements UserService {
     public boolean exists(int id) {
         return userRepository.exists(id);
     }
+
+    @Override
+    public Page findAll(PageRequest pageRequest) {
+        return userRepository.findAll(pageRequest);
+    }
     
+
 
 }

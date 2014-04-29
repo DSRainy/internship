@@ -8,6 +8,8 @@ package com.blogspot.na5cent.orm.service;
 
 import com.blogspot.na5cent.orm.model.User;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 /**
  *
@@ -26,4 +28,7 @@ public interface UserService {
     public User findOne(int id);
     
     public boolean exists(int id);
+
+    public Page findAll(PageRequest pageRequest);
+   
 }

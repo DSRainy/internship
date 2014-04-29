@@ -64,7 +64,7 @@
                     </center>
                 </h:form>
                 <h:form id="userForm">
-                    #{userController.reset()}
+
                     <p:commandButton value="add User"
                                      update=":addUserDialogForm"
                                      actionListener="#{userController.onCreateUser()}"
@@ -72,7 +72,7 @@
                     <br/>
                     <br/>
                     <p:dataTable id="dataTable"
-                                 value="#{userController.users}"
+                                 value="#{userPagingController.userLoadLazy}"
                                  rowIndexVar="counter"
                                  var="item"
                                  widgetVar="usersTable"
@@ -81,21 +81,22 @@
                                  rows="10"
                                  rowsPerPageTemplate="10,20"
                                  paginatorPosition="bottom"
-                                 sortBy="#{item.id}"
-                                 sortOrder="ASCENDING">
-                        <p:column headerText="No." style="width : 5%;background-color: bisque">
+                                 sortBy="id"
+                                 sortOrder="ASCENDING"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" >
+                        <p:column headerText="No." style="width : 5%;background-color: bisque" filterBy="#{userController.user.id}">
                             #{item.id}
                         </p:column>
 
-                        <p:column headerText="name" style="background-color: khaki">
+                        <p:column headerText="name" style="background-color: khaki" filterBy="#{userController.user.name}">
                             #{item.name}
                         </p:column>
 
-                        <p:column headerText="email" style="background-color: khaki">
+                        <p:column headerText="email" style="background-color: khaki" filterBy="#{userController.user.email}">
                             #{item.email}
                         </p:column>
 
-                        <p:column headerText="phone" style="background-color: khaki">
+                        <p:column headerText="phone" style="background-color: khaki" filterBy="#{userController.user.phone}">
                             #{item.phone}
                         </p:column>
 
